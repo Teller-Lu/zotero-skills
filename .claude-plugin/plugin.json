@@ -1,12 +1,12 @@
 {
   "name": "zotero-skills",
-  "description": "Full Zotero CRUD: search, add, update, delete items with notes, tags, collections, and PDF attachments. Dual local/Web API routing.",
-  "version": "0.1.0",
+  "description": "一种以编程方式管理Zotero参考文献的技能——搜索、添加、分类、注释和组织文献。",
+  "version": "1.0.0",
   "author": {
     "name": "Wenyu Chiou"
   },
-  "homepage": "https://github.com/WenyuChiou/zotero-skills",
-  "repository": "https://github.com/WenyuChiou/zotero-skills",
+  "homepage": "https://github.com/Teller-Lu/zotero-skills",
+  "repository": "https://github.com/Teller-Lu/zotero-skills",
   "license": "MIT",
   "keywords": [
     "zotero",

@@ -1,0 +1,19 @@
+{
+  "name": "zotero-skills",
+  "description": "一种以编程方式管理Zotero参考文献的技能——搜索、添加、分类、注释和组织文献。",
+  "owner": {
+  "name": "Teller",
+  "email":"tellerlu@163.com"
+  },
+  "plugins": [
+    {
+      "name": "zotero-skills",
+      "source": "./",
+      "description": "zotero skills for Claude",
+      "version": "1.0.0",
+	  "author": {
+        "name": "WenyuChiou"
+      }
+    }
+  ]
+}
