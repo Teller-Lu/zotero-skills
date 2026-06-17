@@ -1,9 +1,11 @@
 {
   "name": "zotero-skills",
-  "description": "一种以编程方式管理Zotero参考文献的技能——搜索、添加、分类、注释和组织文献。",
-  "version": "1.0.0",
+  "description": "把 Zotero 文献库接到 AI 助理：从搜索 / 入库 / 批注 / 管集合，到按分类批量精读、自动生成 Obsidian 中文精读笔记，一条流水线跑完。",
+  "version": "1.1.0",
   "author": {
-    "name": "Wenyu Chiou"
+    "name": "Teller-Lu",
+	"Wenyu Chiou",
+	"cheneternity"
   },
   "homepage": "https://github.com/Teller-Lu/zotero-skills",
   "repository": "https://github.com/Teller-Lu/zotero-skills",
@@ -12,6 +14,8 @@
     "zotero",
     "research",
     "citations",
+	"read",
+	"paper",
     "literature-management"
   ]
 }
