@@ -11,6 +11,22 @@ marketplace; see that repo's CHANGELOG for the catalog-side history.
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-06-17
+
+### Added
+
+- `zotero-read-explainer` skill —— 单篇论文"决策型精读"：定位取数（Zotero MCP，
+  `get_attachment_path` 失败时回落 `prefs.js` 的 `extensions.zotero.dataDir`）→
+  渲染读图保公式（内置 Read + poppler 首选，PyMuPDF 渲染兜底，pdfplumber 交叉核数）→
+  9 段式中文精读报告（方法 / 主要公式一条不少 / 平衡且决策导向的评价 / 对自身工程价值）。
+  补上本套件此前缺失的"单篇精读解析"能力，明确区别于 `zotero-analytical-writer`
+  的 Obsidian 批量笔记。含 `references/report-template.md`。
+- `zotero-full-translater` skill —— 在 `nature-reader` 基础上改造的"全文翻译式通俗解析"：
+  正文**每部分每段含义完整讲清**（拿不准就直译），**全部公式一条不删**，引言给
+  "整体概述 + 参考文献现状表"，只留主要图表，附"符号参数表（带单位）"与"术语表"，
+  通篇标题序列，文末列出所有不确定项。比 `zotero-read-explainer` 更饱满、比 `nature-reader`
+  更通俗。含 `references/output-spec.md`。
+
 ## [0.1.0] - 2026-05-20
 
 The initial published version. Captures the skill state at commit

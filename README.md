@@ -12,7 +12,7 @@
 
 ### 概览
 
-把 AI 编程助理（Claude Code / Codex CLI / Gemini CLI / Cursor 等）接到 Zotero 文献库的一体化技能包。围绕"搜索 → 入库 → 分类批处理 → 抓数据 → 写精读"完整链路提供 4 个 skill，可独立调用，也可串联成精读工作流。
+把 AI 编程助理（Claude Code / Codex CLI / Gemini CLI / Cursor 等）接到 Zotero 文献库的一体化技能包。围绕"搜索 → 入库 → 分类批处理 → 抓数据 → 写精读"完整链路提供 6 个 skill，可独立调用，也可串联成精读工作流。
 
 ### Skills 一览
 
@@ -22,6 +22,8 @@
 | `zotero-collection-manager` | 分类批处理调度器 | 读取并维护 `_ProcessLog_进度记录.md`；自动跳过已完成 / 已跳过条目；按篇串行调度，处理完一篇立即写日志（断点续跑）；把抓取与写作下放给下游 skill |
 | `zotero-data-fetcher` | 单篇论文语料采集 | 先读 Zotero 数据目录与数据库；优先批注 → 次取全文缓存 → 兜底本地 PDF；保持原始语言，本步骤不翻译不总结 |
 | `zotero-analytical-writer` | 中文精读笔记生成 | Frontmatter 字段高度提炼（不机械抄摘要）；研究区 / 数据源 / 方法 / 核心变量精确提取；公式提取防乱码 + OCR 兜底；过滤作者单位、基金号、投稿规范等学术噪音；按 `templates/论文精读模板.md` 写入 Obsidian |
+| `zotero-read-explainer` | 单篇决策型精读 | 定位取数（Zotero MCP，附件路径取不到时回落 `prefs.js` 的 `dataDir`）；渲染读图保公式（内置 Read + poppler 首选 / PyMuPDF 兜底 + pdfplumber 核数）；产出 9 段式中文精读报告（方法 / 主要公式一条不少 / 平衡且决策导向的评价 / 对自身工程价值）；面向**单篇**，输出 Markdown 报告，不写 Obsidian |
+| `zotero-full-translater` | 全文翻译式通俗解析 | 正文**每部分每段含义完整讲清**（拿不准就直译）；**全部公式一条不删**；引言给"概述 + 参考文献现状表"；只留主要图表；附符号参数表（带单位）+ 术语表；通篇标题序列；文末列不确定项。比精读更饱满、比逐句对照更通俗 |
 
 ### 推荐工作流
 
@@ -36,6 +38,8 @@ zotero-collection-manager  ──┐
                      （生成中文精读笔记，写入 Obsidian）
 
 zotero-library-manager  随时可用（搜索 / 新增 / 批注 / 集合管理）
+zotero-read-explainer   单篇精读随时可用（可选先经 nature-reader 通读 → 输出 Markdown 精读报告）
+zotero-full-translater  全文翻译式通俗解析随时可用（每段讲透 + 全公式 + 引言文献表）
 ```
 
 ### 前置要求
@@ -193,8 +197,16 @@ zotero-skills/
 │   │   └── SKILL.md
 │   ├── zotero-data-fetcher/       # 单篇论文元数据/批注/全文抓取
 │   │   └── SKILL.md
-│   └── zotero-analytical-writer/  # 中文精读笔记生成
-│       └── SKILL.md
+│   ├── zotero-analytical-writer/  # 中文精读笔记生成
+│   │   └── SKILL.md
+│   ├── zotero-read-explainer/     # 单篇决策型精读（渲染读图保公式 → Markdown 报告）
+│   │   ├── SKILL.md
+│   │   └── references/
+│   │       └── report-template.md
+│   └── zotero-full-translater/    # 全文翻译式通俗解析（每段讲透 + 全公式 + 文献表）
+│       ├── SKILL.md
+│       └── references/
+│           └── output-spec.md
 ├── templates/
 │   └── 论文精读模板.md             # 精读模板（被 analytical-writer 引用）
 ├── scripts/
@@ -217,7 +229,7 @@ zotero-skills/
 
 ### Overview
 
-A unified skill bundle that connects AI coding assistants (Claude Code / Codex CLI / Gemini CLI / Cursor) to your Zotero library. Covers the full "search → ingest → batch classify → fetch → close-reading" pipeline through 4 skills — usable standalone or chained into a deep-reading workflow.
+A unified skill bundle that connects AI coding assistants (Claude Code / Codex CLI / Gemini CLI / Cursor) to your Zotero library. Covers the full "search → ingest → batch classify → fetch → close-reading" pipeline through 6 skills — usable standalone or chained into a deep-reading workflow.
 
 ### Skills at a Glance
 
@@ -227,6 +239,8 @@ A unified skill bundle that connects AI coding assistants (Claude Code / Codex C
 | `zotero-collection-manager` | Batch orchestrator | Reads/maintains `_ProcessLog_进度记录.md`; auto-skips completed/skipped entries; serially schedules one paper at a time and writes the log immediately after each (resumable); delegates fetching and writing to downstream skills |
 | `zotero-data-fetcher` | Per-paper data ingest | Reads Zotero data directory + database first; prefers annotations → full-text cache → local PDF fallback; preserves original language (no translation/summarization at this stage) |
 | `zotero-analytical-writer` | Chinese close-reading notes | Highly distilled frontmatter (no mechanical abstract copy); precise extraction of study area / data source / method / core variables; formula extraction with anti-garble + OCR fallback; filters out author affiliations, grant IDs, submission boilerplate; writes Obsidian notes via `templates/论文精读模板.md` |
+| `zotero-read-explainer` | Single-paper decision-grade deep read | Locate & fetch (Zotero MCP; falls back to `prefs.js` `dataDir` when attachment paths are unavailable); formula-faithful page reading (built-in Read + poppler preferred / PyMuPDF fallback + pdfplumber number-checking); produces a 9-section Chinese deep-read report (method / no-formula-left-behind / balanced decision-oriented critique / value to your own engineering); single-paper focused, outputs Markdown, not Obsidian |
+| `zotero-full-translater` | Full-text plain-language translation+explanation | Covers **every section & paragraph in full** (translate verbatim when unsure); **keeps every formula, deletes none**; intro becomes "overview + cited-literature status table"; only main figures/tables; symbol/parameter table (with units) + glossary; full heading structure; trailing uncertainty list. Fuller than a deep-read report, more readable than line-by-line bilingual |
 
 ### Recommended Workflow
 
@@ -241,6 +255,8 @@ zotero-collection-manager  ──┐
                      (generate Chinese close-reading note → Obsidian)
 
 zotero-library-manager  available anytime (search / add / annotate / collections)
+zotero-read-explainer   single-paper deep read, anytime (optionally after nature-reader → outputs a Markdown report)
+zotero-full-translater  full-text plain-language translation+explanation, anytime (every paragraph + every formula + cited-lit table)
 ```
 
 ### Prerequisites
@@ -398,8 +414,16 @@ zotero-skills/
 │   │   └── SKILL.md
 │   ├── zotero-data-fetcher/       # Single-paper metadata/annotations/fulltext
 │   │   └── SKILL.md
-│   └── zotero-analytical-writer/  # Chinese close-reading note generator
-│       └── SKILL.md
+│   ├── zotero-analytical-writer/  # Chinese close-reading note generator
+│   │   └── SKILL.md
+│   ├── zotero-read-explainer/     # Single-paper deep read (formula-faithful page reading → Markdown report)
+│   │   ├── SKILL.md
+│   │   └── references/
+│   │       └── report-template.md
+│   └── zotero-full-translater/    # Full-text plain-language translation+explanation (every paragraph + every formula)
+│       ├── SKILL.md
+│       └── references/
+│           └── output-spec.md
 ├── templates/
 │   └── 论文精读模板.md             # Close-reading template (referenced by analytical-writer)
 ├── scripts/
@@ -423,4 +447,4 @@ MIT
 ## Credits
 
 - `zotero-library-manager` derives from [WenyuChiou's Zotero skill](https://github.com/WenyuChiou/ai-research-skills) (dual-API architecture).
-- `zotero-collection-manager` / `zotero-data-fetcher` / `zotero-analytical-writer` and the close-reading template are by Teller-Lu (cheneternity).
+- `zotero-collection-manager` / `zotero-data-fetcher` / `zotero-analytical-writer` / `zotero-read-explainer` / `zotero-full-translater` and the close-reading templates are by Teller-Lu (cheneternity).
